@@ -942,15 +942,15 @@ func (g *GammaSDK) GetFeaturedEvents(query *UpdatedEventQuery) ([]Event, error) 
 }
 
 // GetActiveMarkets gets active markets
-func (g *GammaSDK) GetActiveMarkets(query *UpdatedMarketQuery) ([]Market, error) {
-	if query == nil {
-		query = &UpdatedMarketQuery{}
-	}
-
-	active := true
-	query.Active = &active
-	return g.GetMarkets(query)
-}
+//func (g *GammaSDK) GetActiveMarkets(query *UpdatedMarketQuery) ([]Market, error) {
+//	if query == nil {
+//		query = &UpdatedMarketQuery{}
+//	}
+//
+//	active := true
+//	query.Active = &active
+//	return g.GetMarkets(query)
+//}
 
 // GetClosedMarkets gets closed markets
 func (g *GammaSDK) GetClosedMarkets(query *UpdatedMarketQuery) ([]Market, error) {

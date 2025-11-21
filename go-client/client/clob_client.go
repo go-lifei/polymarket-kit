@@ -15,14 +15,14 @@ import (
 
 // ClobClient represents a Polymarket CLOB client
 type ClobClient struct {
-	host           string
-	chainID        types.Chain
-	wallet         *auth.Wallet
-	creds          *types.ApiKeyCreds
-	builderConfig  *auth.BuilderConfig
-	geoBlockToken  string
-	useServerTime  bool
-	httpClient     *http.Client
+	host          string
+	chainID       types.Chain
+	wallet        *auth.Wallet
+	creds         *types.ApiKeyCreds
+	builderConfig *auth.BuilderConfig
+	geoBlockToken string
+	useServerTime bool
+	httpClient    *http.Client
 }
 
 // ClientConfig represents configuration for the Clob client

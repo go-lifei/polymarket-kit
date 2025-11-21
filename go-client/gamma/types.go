@@ -3,6 +3,7 @@ package gamma
 import (
 	"encoding/json"
 	"fmt"
+	"math/big"
 	"net/url"
 	"strconv"
 	"time"
@@ -10,11 +11,11 @@ import (
 
 // ProxyConfig represents HTTP/HTTPS proxy configuration
 type ProxyConfig struct {
-	Host     string  `json:"host"`                // Proxy server hostname or IP address
-	Port     int     `json:"port"`                // Proxy server port number
-	Username *string `json:"username,omitempty"`  // Proxy authentication username
-	Password *string `json:"password,omitempty"`  // Proxy authentication password
-	Protocol *string `json:"protocol,omitempty"`  // Proxy protocol (http or https)
+	Host     string  `json:"host"`               // Proxy server hostname or IP address
+	Port     int     `json:"port"`               // Proxy server port number
+	Username *string `json:"username,omitempty"` // Proxy authentication username
+	Password *string `json:"password,omitempty"` // Proxy authentication password
+	Protocol *string `json:"protocol,omitempty"` // Proxy protocol (http or https)
 }
 
 // Team represents a sports team
@@ -41,37 +42,37 @@ type TeamQuery struct {
 
 // Tag represents a tag/categorization
 type Tag struct {
-	ID        string    `json:"id"`
-	Label     string    `json:"label"`
-	Slug      string    `json:"slug"`
-	ForceShow *bool     `json:"forceShow,omitempty"`
-	CreatedAt *string   `json:"createdAt,omitempty"`
-	IsCarousel *bool    `json:"isCarousel,omitempty"`
+	ID         string  `json:"id"`
+	Label      string  `json:"label"`
+	Slug       string  `json:"slug"`
+	ForceShow  *bool   `json:"forceShow,omitempty"`
+	CreatedAt  *string `json:"createdAt,omitempty"`
+	IsCarousel *bool   `json:"isCarousel,omitempty"`
 }
 
 // UpdatedTag represents an updated tag with more fields
 type UpdatedTag struct {
-	ID          string     `json:"id"`
-	Label       string     `json:"label"`
-	Slug        string     `json:"slug"`
-	ForceShow   *bool      `json:"forceShow,omitempty"`
-	PublishedAt *string    `json:"publishedAt,omitempty"`
-	CreatedBy   *int       `json:"createdBy,omitempty"`
-	UpdatedBy   *int       `json:"updatedBy,omitempty"`
-	CreatedAt   string     `json:"createdAt"`
-	UpdatedAt   string     `json:"updatedAt"`
-	ForceHide   *bool      `json:"forceHide,omitempty"`
-	IsCarousel  *bool      `json:"isCarousel,omitempty"`
+	ID          string  `json:"id"`
+	Label       string  `json:"label"`
+	Slug        string  `json:"slug"`
+	ForceShow   *bool   `json:"forceShow,omitempty"`
+	PublishedAt *string `json:"publishedAt,omitempty"`
+	CreatedBy   *int    `json:"createdBy,omitempty"`
+	UpdatedBy   *int    `json:"updatedBy,omitempty"`
+	CreatedAt   string  `json:"createdAt"`
+	UpdatedAt   string  `json:"updatedAt"`
+	ForceHide   *bool   `json:"forceHide,omitempty"`
+	IsCarousel  *bool   `json:"isCarousel,omitempty"`
 }
 
 // TagQuery represents query parameters for tags
 type TagQuery struct {
-	Limit      *int   `json:"limit,omitempty"`
-	Offset     *int   `json:"offset,omitempty"`
+	Limit      *int    `json:"limit,omitempty"`
+	Offset     *int    `json:"offset,omitempty"`
 	Order      *string `json:"order,omitempty"`
-	Ascending  *bool  `json:"ascending,omitempty"`
+	Ascending  *bool   `json:"ascending,omitempty"`
 	Search     *string `json:"search,omitempty"`
-	IsCarousel *bool  `json:"is_carousel,omitempty"`
+	IsCarousel *bool   `json:"is_carousel,omitempty"`
 }
 
 // TagByIdQuery represents query parameters for getting tag by ID
@@ -81,11 +82,11 @@ type TagByIdQuery struct {
 
 // RelatedTagRelationship represents relationships between tags
 type RelatedTagRelationship struct {
-	SourceTagID      int              `json:"sourceTagId"`
-	TargetTagID      int              `json:"targetTagId"`
-	RelationshipType string           `json:"relationshipType"`
-	TargetTag        UpdatedTag       `json:"targetTag"`
-	Relationship     TagRelationship  `json:"relationship"`
+	SourceTagID      int             `json:"sourceTagId"`
+	TargetTagID      int             `json:"targetTagId"`
+	RelationshipType string          `json:"relationshipType"`
+	TargetTag        UpdatedTag      `json:"targetTag"`
+	Relationship     TagRelationship `json:"relationship"`
 }
 
 // TagRelationship represents relationship metadata
@@ -105,113 +106,113 @@ type RelatedTagsQuery struct {
 
 // EventMarket represents a market within an event
 type EventMarket struct {
-	ID                  string     `json:"id"`
-	Question            string     `json:"question"`
-	ConditionID         string     `json:"conditionId"`
-	Slug                string     `json:"slug"`
-	ResolutionSource    *string    `json:"resolutionSource,omitempty"`
-	EndDate             *string    `json:"endDate,omitempty"`
-	Liquidity           *string    `json:"liquidity,omitempty"`
-	StartDate           *string    `json:"startDate,omitempty"`
-	Image               string     `json:"image"`
-	Icon                string     `json:"icon"`
-	Description         string     `json:"description"`
-	Outcomes            []string   `json:"outcomes"`           // Parsed from JSON string
-	OutcomePrices       []string   `json:"outcomePrices"`      // Parsed from JSON string
-	Volume              *string    `json:"volume,omitempty"`
-	Active              bool       `json:"active"`
-	Closed              bool       `json:"closed"`
-	MarketMakerAddress  *string    `json:"marketMakerAddress,omitempty"`
-	CreatedAt           string     `json:"createdAt"`
-	UpdatedAt           string     `json:"updatedAt"`
-	New                 *bool      `json:"new,omitempty"`
-	ClobTokenIDs        []string   `json:"clobTokenIds"`      // Parsed from JSON string
+	ID                 string   `json:"id"`
+	Question           string   `json:"question"`
+	ConditionID        string   `json:"conditionId"`
+	Slug               string   `json:"slug"`
+	ResolutionSource   *string  `json:"resolutionSource,omitempty"`
+	EndDate            *string  `json:"endDate,omitempty"`
+	Liquidity          *string  `json:"liquidity,omitempty"`
+	StartDate          *string  `json:"startDate,omitempty"`
+	Image              string   `json:"image"`
+	Icon               string   `json:"icon"`
+	Description        string   `json:"description"`
+	Outcomes           []string `json:"outcomes"`      // Parsed from JSON string
+	OutcomePrices      []string `json:"outcomePrices"` // Parsed from JSON string
+	Volume             *string  `json:"volume,omitempty"`
+	Active             bool     `json:"active"`
+	Closed             bool     `json:"closed"`
+	MarketMakerAddress *string  `json:"marketMakerAddress,omitempty"`
+	CreatedAt          string   `json:"createdAt"`
+	UpdatedAt          string   `json:"updatedAt"`
+	New                *bool    `json:"new,omitempty"`
+	ClobTokenIDs       []string `json:"clobTokenIds"` // Parsed from JSON string
 }
 
 // Event represents a collection of related markets
 type Event struct {
-	ID                     string          `json:"id"`
-	Ticker                 string          `json:"ticker"`
-	Slug                   string          `json:"slug"`
-	Title                  string          `json:"title"`
-	Description            *string         `json:"description,omitempty"`
-	ResolutionSource       *string         `json:"resolutionSource,omitempty"`
-	StartDate              *string         `json:"startDate,omitempty"`
-	CreationDate           *string         `json:"creationDate,omitempty"`
-	EndDate                *string         `json:"endDate,omitempty"`
-	Image                  string          `json:"image"`
-	Icon                   string          `json:"icon"`
-	Active                 bool            `json:"active"`
-	Closed                 bool            `json:"closed"`
-	Archived               bool            `json:"archived"`
-	New                    *bool           `json:"new,omitempty"`
-	Featured               *bool           `json:"featured,omitempty"`
-	Restricted             *bool           `json:"restricted,omitempty"`
-	Liquidity              *float64        `json:"liquidity,omitempty"`
-	Volume                 *float64        `json:"volume,omitempty"`
-	Volume24hr             *float64        `json:"volume24hr,omitempty"`
-	VolumeNum              *float64        `json:"volumeNum,omitempty"`
-	LastActiveAt           *string         `json:"lastActiveAt,omitempty"`
-	LiquidityAmm           *float64        `json:"liquidityAmm,omitempty"`
-	LiquidityNum           *float64        `json:"liquidityNum,omitempty"`
-	Markets                []EventMarket   `json:"markets"`
-	Series                 []Series        `json:"series,omitempty"`
-	Tags                   []Tag           `json:"tags,omitempty"`
-	Cyom                   *bool           `json:"cyom,omitempty"`
-	ShowAllOutcomes        *bool           `json:"showAllOutcomes,omitempty"`
-	ShowMarketImages       *bool           `json:"showMarketImages,omitempty"`
-	EnableNegRisk          *bool           `json:"enableNegRisk,omitempty"`
-	AutomaticallyActive    *bool           `json:"automaticallyActive,omitempty"`
-	SeriesSlug             *string         `json:"seriesSlug,omitempty"`
-	GmpChartMode           *string         `json:"gmpChartMode,omitempty"`
-	NegRiskAugmented       *bool           `json:"negRiskAugmented,omitempty"`
-	PendingDeployment      *bool           `json:"pendingDeployment,omitempty"`
-	Deploying              *bool           `json:"deploying,omitempty"`
-	SortBy                 *string         `json:"sortBy,omitempty"`
-	ClosedTime             *string         `json:"closedTime,omitempty"`
-	AutomaticallyResolved  *bool           `json:"automaticallyResolved,omitempty"`
+	ID                    string        `json:"id"`
+	Ticker                string        `json:"ticker"`
+	Slug                  string        `json:"slug"`
+	Title                 string        `json:"title"`
+	Description           *string       `json:"description,omitempty"`
+	ResolutionSource      *string       `json:"resolutionSource,omitempty"`
+	StartDate             *string       `json:"startDate,omitempty"`
+	CreationDate          *string       `json:"creationDate,omitempty"`
+	EndDate               *string       `json:"endDate,omitempty"`
+	Image                 string        `json:"image"`
+	Icon                  string        `json:"icon"`
+	Active                bool          `json:"active"`
+	Closed                bool          `json:"closed"`
+	Archived              bool          `json:"archived"`
+	New                   *bool         `json:"new,omitempty"`
+	Featured              *bool         `json:"featured,omitempty"`
+	Restricted            *bool         `json:"restricted,omitempty"`
+	Liquidity             *float64      `json:"liquidity,omitempty"`
+	Volume                *float64      `json:"volume,omitempty"`
+	Volume24hr            *float64      `json:"volume24hr,omitempty"`
+	VolumeNum             *float64      `json:"volumeNum,omitempty"`
+	LastActiveAt          *string       `json:"lastActiveAt,omitempty"`
+	LiquidityAmm          *float64      `json:"liquidityAmm,omitempty"`
+	LiquidityNum          *float64      `json:"liquidityNum,omitempty"`
+	Markets               []EventMarket `json:"markets"`
+	Series                []Series      `json:"series,omitempty"`
+	Tags                  []Tag         `json:"tags,omitempty"`
+	Cyom                  *bool         `json:"cyom,omitempty"`
+	ShowAllOutcomes       *bool         `json:"showAllOutcomes,omitempty"`
+	ShowMarketImages      *bool         `json:"showMarketImages,omitempty"`
+	EnableNegRisk         *bool         `json:"enableNegRisk,omitempty"`
+	AutomaticallyActive   *bool         `json:"automaticallyActive,omitempty"`
+	SeriesSlug            *string       `json:"seriesSlug,omitempty"`
+	GmpChartMode          *string       `json:"gmpChartMode,omitempty"`
+	NegRiskAugmented      *bool         `json:"negRiskAugmented,omitempty"`
+	PendingDeployment     *bool         `json:"pendingDeployment,omitempty"`
+	Deploying             *bool         `json:"deploying,omitempty"`
+	SortBy                *string       `json:"sortBy,omitempty"`
+	ClosedTime            *string       `json:"closedTime,omitempty"`
+	AutomaticallyResolved *bool         `json:"automaticallyResolved,omitempty"`
 }
 
 // UpdatedEventQuery represents query parameters for events
 type UpdatedEventQuery struct {
-	Limit      *int      `json:"limit,omitempty"`
-	Offset     *int      `json:"offset,omitempty"`
-	Order      *string   `json:"order,omitempty"`
-	Ascending  *bool     `json:"ascending,omitempty"`
-	Search     *string   `json:"search,omitempty"`
-	Active     *bool     `json:"active,omitempty"`
-	Closed     *bool     `json:"closed,omitempty"`
-	Archived   *bool     `json:"archived,omitempty"`
-	Featured   *bool     `json:"featured,omitempty"`
-	New        *bool     `json:"new,omitempty"`
-	Restricted *bool     `json:"restricted,omitempty"`
-	MinVolume  *float64  `json:"minVolume,omitempty"`
-	MaxVolume  *float64  `json:"maxVolume,omitempty"`
+	Limit        *int     `json:"limit,omitempty"`
+	Offset       *int     `json:"offset,omitempty"`
+	Order        *string  `json:"order,omitempty"`
+	Ascending    *bool    `json:"ascending,omitempty"`
+	Search       *string  `json:"search,omitempty"`
+	Active       *bool    `json:"active,omitempty"`
+	Closed       *bool    `json:"closed,omitempty"`
+	Archived     *bool    `json:"archived,omitempty"`
+	Featured     *bool    `json:"featured,omitempty"`
+	New          *bool    `json:"new,omitempty"`
+	Restricted   *bool    `json:"restricted,omitempty"`
+	MinVolume    *float64 `json:"minVolume,omitempty"`
+	MaxVolume    *float64 `json:"maxVolume,omitempty"`
 	MinLiquidity *float64 `json:"minLiquidity,omitempty"`
 	MaxLiquidity *float64 `json:"maxLiquidity,omitempty"`
-	Series     *string   `json:"series,omitempty"`
-	Tag        *string   `json:"tag,omitempty"`
-	StartDate  *string   `json:"startDate,omitempty"`
-	EndDate    *string   `json:"endDate,omitempty"`
+	Series       *string  `json:"series,omitempty"`
+	Tag          *string  `json:"tag,omitempty"`
+	StartDate    *string  `json:"startDate,omitempty"`
+	EndDate      *string  `json:"endDate,omitempty"`
 }
 
 // PaginatedEventQuery represents query parameters for paginated events
 type PaginatedEventQuery struct {
-	Limit      *int      `json:"limit,omitempty"`
-	Offset     *int      `json:"offset,omitempty"`
-	Order      *string   `json:"order,omitempty"`
-	Ascending  *bool     `json:"ascending,omitempty"`
-	Search     *string   `json:"search,omitempty"`
-	Active     *bool     `json:"active,omitempty"`
-	Closed     *bool     `json:"closed,omitempty"`
-	Archived   *bool     `json:"archived,omitempty"`
-	Featured   *bool     `json:"featured,omitempty"`
-	New        *bool     `json:"new,omitempty"`
-	Restricted *bool     `json:"restricted,omitempty"`
-	Series     *string   `json:"series,omitempty"`
-	Tag        *string   `json:"tag,omitempty"`
-	StartDate  *string   `json:"startDate,omitempty"`
-	EndDate    *string   `json:"endDate,omitempty"`
+	Limit      *int    `json:"limit,omitempty"`
+	Offset     *int    `json:"offset,omitempty"`
+	Order      *string `json:"order,omitempty"`
+	Ascending  *bool   `json:"ascending,omitempty"`
+	Search     *string `json:"search,omitempty"`
+	Active     *bool   `json:"active,omitempty"`
+	Closed     *bool   `json:"closed,omitempty"`
+	Archived   *bool   `json:"archived,omitempty"`
+	Featured   *bool   `json:"featured,omitempty"`
+	New        *bool   `json:"new,omitempty"`
+	Restricted *bool   `json:"restricted,omitempty"`
+	Series     *string `json:"series,omitempty"`
+	Tag        *string `json:"tag,omitempty"`
+	StartDate  *string `json:"startDate,omitempty"`
+	EndDate    *string `json:"endDate,omitempty"`
 }
 
 // EventByIdQuery represents query parameters for getting event by ID
@@ -221,54 +222,77 @@ type EventByIdQuery struct {
 
 // Market represents a trading market
 type Market struct {
-	ID               string     `json:"id"`
-	Question         string     `json:"question"`
-	ConditionID      string     `json:"conditionId"`
-	Slug             string     `json:"slug"`
-	Liquidity        *string    `json:"liquidity,omitempty"`
-	StartDate        *string    `json:"startDate,omitempty"`
-	Image            string     `json:"image"`
-	Icon             string     `json:"icon"`
-	Description      string     `json:"description"`
-	Active           bool       `json:"active"`
-	Volume           string     `json:"volume"`
-	Outcomes         []string   `json:"outcomes"`         // Parsed from JSON string
-	OutcomePrices    []string   `json:"outcomePrices"`    // Parsed from JSON string
-	Closed           bool       `json:"closed"`
-	New              *bool      `json:"new,omitempty"`
-	QuestionID       *string    `json:"questionId,omitempty"`
-	VolumeNum        float64    `json:"volumeNum"`
-	LiquidityNum     *float64   `json:"liquidityNum,omitempty"`
-	StartDateIso     *string    `json:"startDateIso,omitempty"`
-	HasReviewedDates *bool      `json:"hasReviewedDates,omitempty"`
-	ClobTokenIDs     []string   `json:"clobTokenIds"`     // Parsed from JSON string
-	EndDate          *string    `json:"endDate,omitempty"`
-	LastActiveAt     *string    `json:"lastActiveAt,omitempty"`
+	ID               string   `json:"id"`
+	Question         string   `json:"question"`
+	ConditionID      string   `json:"conditionId"`
+	Slug             string   `json:"slug"`
+	Liquidity        *string  `json:"liquidity,omitempty"`
+	StartDate        *string  `json:"startDate,omitempty"`
+	Image            string   `json:"image"`
+	Icon             string   `json:"icon"`
+	Description      string   `json:"description"`
+	Active           bool     `json:"active"`
+	Volume           string   `json:"volume"`
+	Outcomes         []string `json:"outcomes"`      // Parsed from JSON string
+	OutcomePrices    []string `json:"outcomePrices"` // Parsed from JSON string
+	Closed           bool     `json:"closed"`
+	New              *bool    `json:"new,omitempty"`
+	QuestionID       *string  `json:"questionId,omitempty"`
+	VolumeNum        float64  `json:"volumeNum"`
+	LiquidityNum     *float64 `json:"liquidityNum,omitempty"`
+	StartDateIso     *string  `json:"startDateIso,omitempty"`
+	HasReviewedDates *bool    `json:"hasReviewedDates,omitempty"`
+	ClobTokenIDs     []string `json:"clobTokenIds"` // Parsed from JSON string
+	EndDate          *string  `json:"endDate,omitempty"`
+	LastActiveAt     *string  `json:"lastActiveAt,omitempty"`
 }
 
 // UpdatedMarketQuery represents query parameters for markets
 type UpdatedMarketQuery struct {
-	Limit         *int     `json:"limit,omitempty"`
-	Offset        *int     `json:"offset,omitempty"`
-	Order         *string  `json:"order,omitempty"`
-	Ascending     *bool    `json:"ascending,omitempty"`
-	Search        *string  `json:"search,omitempty"`
-	Active        *bool    `json:"active,omitempty"`
-	Closed        *bool    `json:"closed,omitempty"`
-	New           *bool    `json:"new,omitempty"`
-	Event         *string  `json:"event,omitempty"`
-	EventSlug     *string  `json:"eventSlug,omitempty"`
-	Series        *string  `json:"series,omitempty"`
-	SeriesSlug    *string  `json:"seriesSlug,omitempty"`
-	Tag           *string  `json:"tag,omitempty"`
-	MinVolume     *float64 `json:"minVolume,omitempty"`
-	MaxVolume     *float64 `json:"maxVolume,omitempty"`
-	MinLiquidity  *float64 `json:"minLiquidity,omitempty"`
-	MaxLiquidity  *float64 `json:"maxLiquidity,omitempty"`
-	StartDate     *string  `json:"startDate,omitempty"`
-	EndDate       *string  `json:"endDate,omitempty"`
-	QuestionID    *string  `json:"questionId,omitempty"`
-	ConditionID   *string  `json:"conditionId,omitempty"`
+	// 分页参数
+	Limit  *int `json:"limit,omitempty"`  // 默认 20，最大 100
+	Offset *int `json:"offset,omitempty"` // 默认 0
+
+	// 排序
+	Order     *string `json:"order,omitempty"`     // e.g. "volume", "liquidity", "close_date"
+	Ascending *bool   `json:"ascending,omitempty"` // true=升序 false=降序
+
+	// 精确匹配
+	ID                 []big.Int `json:"id,omitempty"`                   // 市场 ID 数组
+	Slug               []string  `json:"slug,omitempty"`                 // 市场 slug 数组
+	ClobTokenIDs       []string  `json:"clob_token_ids,omitempty"`       // Token ID 数组
+	ConditionIDs       []string  `json:"condition_ids,omitempty"`        // Condition ID 数组
+	MarketMakerAddress *string   `json:"market_maker_address,omitempty"` // 市场创建者地址
+
+	// 数值范围过滤
+	LiquidityNumMin *float64 `json:"liquidity_num_min,omitempty"`
+	LiquidityNumMax *float64 `json:"liquidity_num_max,omitempty"`
+	VolumeNumMin    *float64 `json:"volume_num_min,omitempty"`
+	VolumeNumMax    *float64 `json:"volume_num_max,omitempty"`
+
+	// 时间范围
+	StartDateMin *string `json:"start_date_min,omitempty"` // ISO8601
+	StartDateMax *string `json:"start_date_max,omitempty"`
+	EndDateMin   *string `json:"end_date_min,omitempty"`
+	EndDateMax   *string `json:"end_date_max,omitempty"`
+
+	// 标签与分类
+	TagID               *int    `json:"tag_id,omitempty"`
+	RelatedTags         *bool   `json:"related_tags,omitempty"`
+	CYOM                *bool   `json:"cyom,omitempty"` // Create Your Own Market
+	UMAResolutionStatus *string `json:"uma_resolution_status,omitempty"`
+
+	// 游戏/体育相关
+	GameID            *string  `json:"game_id,omitempty"`
+	SportsMarketTypes []string `json:"sports_market_types,omitempty"`
+
+	// 奖励与问题
+	RewardsMinSize *float64 `json:"rewards_min_size,omitempty"`
+	QuestionIDs    []string `json:"question_ids,omitempty"`
+
+	// 其他常用过滤
+	IncludeTag *bool `json:"include_tag,omitempty"`
+	Closed     *bool `json:"closed,omitempty"` // 是否已结束
 }
 
 // MarketByIdQuery represents query parameters for getting market by ID
@@ -278,44 +302,44 @@ type MarketByIdQuery struct {
 
 // Series represents a series of related events
 type Series struct {
-	ID            string     `json:"id"`
-	Ticker        string     `json:"ticker"`
-	Slug          string     `json:"slug"`
-	Title         string     `json:"title"`
-	Subtitle      *string    `json:"subtitle,omitempty"`
-	SeriesType    *string    `json:"seriesType,omitempty"`
-	Recurrence    *string    `json:"recurrence,omitempty"`
-	Image         *string    `json:"image,omitempty"`
-	Icon          *string    `json:"icon,omitempty"`
-	Active        bool       `json:"active"`
-	Closed        bool       `json:"closed"`
-	Archived      bool       `json:"archived"`
-	Volume        *float64   `json:"volume,omitempty"`
-	Liquidity     *float64   `json:"liquidity,omitempty"`
-	StartDate     *string    `json:"startDate,omitempty"`
-	CreatedAt     string     `json:"createdAt"`
-	UpdatedAt     string     `json:"updatedAt"`
-	Competitive   *float64   `json:"competitive,omitempty"`
-	Volume24hr    *float64   `json:"volume24hr,omitempty"`
-	PythTokenID   *string    `json:"pythTokenId,omitempty"`
-	LastActiveAt  *string    `json:"lastActiveAt,omitempty"`
-	SeriesTypeMap *string    `json:"seriesTypeMap,omitempty"`
+	ID            string   `json:"id"`
+	Ticker        string   `json:"ticker"`
+	Slug          string   `json:"slug"`
+	Title         string   `json:"title"`
+	Subtitle      *string  `json:"subtitle,omitempty"`
+	SeriesType    *string  `json:"seriesType,omitempty"`
+	Recurrence    *string  `json:"recurrence,omitempty"`
+	Image         *string  `json:"image,omitempty"`
+	Icon          *string  `json:"icon,omitempty"`
+	Active        bool     `json:"active"`
+	Closed        bool     `json:"closed"`
+	Archived      bool     `json:"archived"`
+	Volume        *float64 `json:"volume,omitempty"`
+	Liquidity     *float64 `json:"liquidity,omitempty"`
+	StartDate     *string  `json:"startDate,omitempty"`
+	CreatedAt     string   `json:"createdAt"`
+	UpdatedAt     string   `json:"updatedAt"`
+	Competitive   *float64 `json:"competitive,omitempty"`
+	Volume24hr    *float64 `json:"volume24hr,omitempty"`
+	PythTokenID   *string  `json:"pythTokenId,omitempty"`
+	LastActiveAt  *string  `json:"lastActiveAt,omitempty"`
+	SeriesTypeMap *string  `json:"seriesTypeMap,omitempty"`
 }
 
 // SeriesQuery represents query parameters for series
 type SeriesQuery struct {
-	Limit     *int    `json:"limit,omitempty"`
-	Offset    *int    `json:"offset,omitempty"`
-	Order     *string `json:"order,omitempty"`
-	Ascending *bool   `json:"ascending,omitempty"`
-	Search    *string `json:"search,omitempty"`
-	Active    *bool   `json:"active,omitempty"`
-	Closed    *bool   `json:"closed,omitempty"`
-	Archived  *bool   `json:"archived,omitempty"`
+	Limit     *int     `json:"limit,omitempty"`
+	Offset    *int     `json:"offset,omitempty"`
+	Order     *string  `json:"order,omitempty"`
+	Ascending *bool    `json:"ascending,omitempty"`
+	Search    *string  `json:"search,omitempty"`
+	Active    *bool    `json:"active,omitempty"`
+	Closed    *bool    `json:"closed,omitempty"`
+	Archived  *bool    `json:"archived,omitempty"`
 	MinVolume *float64 `json:"minVolume,omitempty"`
 	MaxVolume *float64 `json:"maxVolume,omitempty"`
-	StartDate *string `json:"startDate,omitempty"`
-	EndDate   *string `json:"endDate,omitempty"`
+	StartDate *string  `json:"startDate,omitempty"`
+	EndDate   *string  `json:"endDate,omitempty"`
 }
 
 // SeriesByIdQuery represents query parameters for getting series by ID
@@ -325,26 +349,26 @@ type SeriesByIdQuery struct {
 
 // Comment represents a user comment
 type Comment struct {
-	ID              string      `json:"id"`
-	Body            string      `json:"body"`
+	ID               string      `json:"id"`
+	Body             string      `json:"body"`
 	ParentEntityType string      `json:"parentEntityType"`
-	ParentEntityID  int         `json:"parentEntityID"`
-	UserAddress     string      `json:"userAddress"`
-	CreatedAt       string      `json:"createdAt"`
-	Profile         interface{} `json:"profile,omitempty"`         // Profile object structure can vary
-	Reactions       interface{} `json:"reactions,omitempty"`      // Reaction objects can vary
-	ReportCount     int         `json:"reportCount"`
-	ReactionCount   int         `json:"reactionCount"`
+	ParentEntityID   int         `json:"parentEntityID"`
+	UserAddress      string      `json:"userAddress"`
+	CreatedAt        string      `json:"createdAt"`
+	Profile          interface{} `json:"profile,omitempty"`   // Profile object structure can vary
+	Reactions        interface{} `json:"reactions,omitempty"` // Reaction objects can vary
+	ReportCount      int         `json:"reportCount"`
+	ReactionCount    int         `json:"reactionCount"`
 }
 
 // CommentQuery represents query parameters for comments
 type CommentQuery struct {
-	Limit           *int    `json:"limit,omitempty"`
-	Offset          *int    `json:"offset,omitempty"`
-	Order           *string `json:"order,omitempty"`
-	Ascending       *bool   `json:"ascending,omitempty"`
+	Limit            *int    `json:"limit,omitempty"`
+	Offset           *int    `json:"offset,omitempty"`
+	Order            *string `json:"order,omitempty"`
+	Ascending        *bool   `json:"ascending,omitempty"`
 	ParentEntityType *string `json:"parent_entity_type,omitempty"`
-	ParentEntityID  *int   `json:"parent_entity_id,omitempty"`
+	ParentEntityID   *int    `json:"parent_entity_id,omitempty"`
 }
 
 // CommentByIdQuery represents query parameters for getting comments by ID
@@ -365,18 +389,18 @@ type CommentsByUserQuery struct {
 
 // SearchQuery represents query parameters for search
 type SearchQuery struct {
-	Q               *string  `json:"q,omitempty"`
-	LimitPerType    *int     `json:"limit_per_type,omitempty"`
-	EventsStatus    *string  `json:"events_status,omitempty"`
-	EventsActive    *bool    `json:"events_active,omitempty"`
-	EventsClosed    *bool    `json:"events_closed,omitempty"`
-	EventsArchived  *bool    `json:"events_archived,omitempty"`
-	EventsFeatured  *bool    `json:"events_featured,omitempty"`
-	MarketsActive   *bool    `json:"markets_active,omitempty"`
-	MarketsClosed   *bool    `json:"markets_closed,omitempty"`
-	TagsCarousel    *bool    `json:"tags_carousel,omitempty"`
-	SeriesActive    *bool    `json:"series_active,omitempty"`
-	SeriesClosed    *bool    `json:"series_closed,omitempty"`
+	Q              *string `json:"q,omitempty"`
+	LimitPerType   *int    `json:"limit_per_type,omitempty"`
+	EventsStatus   *string `json:"events_status,omitempty"`
+	EventsActive   *bool   `json:"events_active,omitempty"`
+	EventsClosed   *bool   `json:"events_closed,omitempty"`
+	EventsArchived *bool   `json:"events_archived,omitempty"`
+	EventsFeatured *bool   `json:"events_featured,omitempty"`
+	MarketsActive  *bool   `json:"markets_active,omitempty"`
+	MarketsClosed  *bool   `json:"markets_closed,omitempty"`
+	TagsCarousel   *bool   `json:"tags_carousel,omitempty"`
+	SeriesActive   *bool   `json:"series_active,omitempty"`
+	SeriesClosed   *bool   `json:"series_closed,omitempty"`
 }
 
 // SearchResponse represents the response from search API
@@ -395,9 +419,9 @@ type Pagination struct {
 // APIResponse represents a generic API response
 type APIResponse struct {
 	Data      json.RawMessage `json:"data"`
-	Status    int            `json:"status"`
-	OK        bool           `json:"ok"`
-	ErrorData interface{}    `json:"errorData,omitempty"`
+	Status    int             `json:"status"`
+	OK        bool            `json:"ok"`
+	ErrorData interface{}     `json:"errorData,omitempty"`
 }
 
 // GammaError represents an error response from the Gamma API
@@ -410,7 +434,7 @@ type GammaError struct {
 
 // PaginatedEventsResponse represents paginated events response
 type PaginatedEventsResponse struct {
-	Data       []Event     `json:"data"`
+	Data       []Event    `json:"data"`
 	Pagination Pagination `json:"pagination"`
 }
 
