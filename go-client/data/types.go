@@ -108,9 +108,6 @@ type Activity struct {
 	Fee             *float64 `json:"fee,omitempty"`
 	ConditionID     string   `json:"conditionId"`
 	Outcome         string   `json:"outcome"`
-	Market          string   `json:"market"`
-	From            string   `json:"from"`
-	To              string   `json:"to"`
 	Value           *float64 `json:"value,omitempty"`
 	// Additional fields from actual API response
 	Title                 string `json:"title"`
